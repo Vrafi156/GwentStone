@@ -10,6 +10,8 @@ public class player {
     private int nrDecks;
      ArrayList<card> deck = new ArrayList<card>();
      ArrayList<card> hand = new ArrayList<card>();
+    int wins;
+
 
     public int getMana() {
         return mana;

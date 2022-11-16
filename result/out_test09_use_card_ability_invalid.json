@@ -23,6 +23,50 @@
   "x" : 2,
   "y" : 0
 }, {
+  "command" : "cardUsesAbility",
+  "error" : "Attacker card is frozen.",
+  "cardAttacker" : {
+    "x" : 2,
+    "y" : 0
+  },
+  "cardAttacked" : {
+    "x" : 0,
+    "y" : 0
+  }
+}, {
+  "command" : "cardUsesAbility",
+  "error" : "Attacked card is not of type 'Tank'.",
+  "cardAttacker" : {
+    "x" : 2,
+    "y" : 0
+  },
+  "cardAttacked" : {
+    "x" : 0,
+    "y" : 0
+  }
+}, {
+  "command" : "cardUsesAbility",
+  "error" : "Attacker card has already attacked this turn.",
+  "cardAttacker" : {
+    "x" : 3,
+    "y" : 0
+  },
+  "cardAttacked" : {
+    "x" : 1,
+    "y" : 0
+  }
+}, {
+  "command" : "cardUsesAbility",
+  "error" : "Attacked card does not belong to the enemy.",
+  "cardAttacker" : {
+    "x" : 2,
+    "y" : 0
+  },
+  "cardAttacked" : {
+    "x" : 2,
+    "y" : 1
+  }
+}, {
   "command" : "getCardsInHand",
   "playerIdx" : 2,
   "output" : [ {
@@ -40,6 +84,17 @@
 }, {
   "command" : "getPlayerTurn",
   "output" : 2
+}, {
+  "command" : "cardUsesAbility",
+  "error" : "Attacked card does not belong to the current player.",
+  "cardAttacker" : {
+    "x" : 0,
+    "y" : 0
+  },
+  "cardAttacked" : {
+    "x" : 2,
+    "y" : 1
+  }
 }, {
   "command" : "getPlayerMana",
   "output" : 14,
@@ -62,8 +117,8 @@
     "description" : "Standard card: A warrior who is never afraid of battle, no matter the costs",
     "colors" : [ "Red", "Purple" ],
     "name" : "Goliath",
-    "attackDamage" : 1,
-    "health" : 8
+    "attackDamage" : 8,
+    "health" : 1
   }, {
     "mana" : 4,
     "description" : "Premium card: Insanity is always an option, now it is an absolute.",

@@ -64,7 +64,7 @@
     "colors" : [ "Red", "Black" ],
     "name" : "Miraj",
     "attackDamage" : 5,
-    "health" : 4
+    "health" : 2
   },
   "x" : 2,
   "y" : 0
@@ -92,7 +92,7 @@
     "colors" : [ "Purple", "Yellow" ],
     "name" : "Berserker",
     "attackDamage" : 2,
-    "health" : 2
+    "health" : 4
   },
   "x" : 0,
   "y" : 0
@@ -130,10 +130,17 @@
     "colors" : [ "Purple", "Yellow" ],
     "name" : "Berserker",
     "attackDamage" : 2,
-    "health" : 1
+    "health" : 5
   },
   "x" : 0,
   "y" : 0
+}, {
+  "command" : "useAttackHero",
+  "error" : "Attacked card is not of type 'Tank'.",
+  "cardAttacker" : {
+    "x" : 0,
+    "y" : 0
+  }
 }, {
   "command" : "getPlayerTurn",
   "output" : 2
@@ -145,7 +152,7 @@
     "colors" : [ "Red", "Black" ],
     "name" : "Miraj",
     "attackDamage" : 5,
-    "health" : 4
+    "health" : 3
   },
   "x" : 2,
   "y" : 0
@@ -154,7 +161,7 @@
   "output" : [ ]
 }, {
   "command" : "getPlayerMana",
-  "output" : 8,
+  "output" : 5,
   "playerIdx" : 1
 }, {
   "command" : "getEnvironmentCardsInHand",
@@ -178,7 +185,7 @@
     "colors" : [ "Purple", "Yellow" ],
     "name" : "Berserker",
     "attackDamage" : 2,
-    "health" : 1
+    "health" : 5
   },
   "x" : 0,
   "y" : 0
@@ -187,11 +194,13 @@
   "output" : [ ]
 }, {
   "command" : "getPlayerMana",
-  "output" : 4,
+  "output" : 1,
   "playerIdx" : 2
 }, {
   "command" : "getPlayerTurn",
   "output" : 2
+}, {
+  "gameEnded" : "Player one killed the enemy hero."
 }, {
   "command" : "getCardsOnTable",
   "output" : [ [ {
@@ -199,8 +208,8 @@
     "description" : "Premium card: Fear him. Your last breath is now.",
     "colors" : [ "Purple", "Yellow" ],
     "name" : "Berserker",
-    "attackDamage" : 2,
-    "health" : 1
+    "attackDamage" : 3,
+    "health" : 5
   } ], [ {
     "mana" : 4,
     "description" : "Premium card: Ravished by the winds of hell, no soul is to be forgiven.",
@@ -228,21 +237,21 @@
     "colors" : [ "Red", "Black" ],
     "name" : "Miraj",
     "attackDamage" : 5,
-    "health" : 4
+    "health" : 3
   }, {
     "mana" : 3,
     "description" : "Premium card: No matter how many, his body will fight. Save your breath for the Mountain is strong.",
     "colors" : [ "Brown", "Black", "Grey" ],
     "name" : "Goliath",
     "attackDamage" : 1,
-    "health" : 2
+    "health" : 3
   }, {
     "mana" : 5,
     "description" : "Standard card: When he is near, close your eyes. They betray your mind.",
     "colors" : [ "Yellow", "Orange", "Red" ],
     "name" : "Miraj",
     "attackDamage" : 4,
-    "health" : 3
+    "health" : 4
   }, {
     "mana" : 3,
     "description" : "Standard card: A warrior who is never afraid of battle, no matter the costs",
@@ -256,7 +265,7 @@
     "colors" : [ "Black", "Grey", "Blue" ],
     "name" : "Sentinel",
     "attackDamage" : 1,
-    "health" : 2
+    "health" : 3
   } ] ]
 }, {
   "command" : "getCardsInHand",
@@ -290,4 +299,13 @@
     "attackDamage" : 0,
     "health" : 4
   } ]
+}, {
+  "command" : "getTotalGamesPlayed",
+  "output" : 1
+}, {
+  "command" : "getPlayerTwoWins",
+  "output" : 0
+}, {
+  "command" : "getPlayerOneWins",
+  "output" : 1
 } ]

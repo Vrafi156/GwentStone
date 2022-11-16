@@ -85,28 +85,46 @@ public final class Main {
         int howManyTurns = 0;
         //Sa inceapa magia
         int manapower = 1;
-        joc.player2.setMana(1);
-        joc.player1.setMana(1);
+
+        int v1 = 0;
+        int v2 = 0;
         for (int k = 0; k < inputData.getGames().size(); k++) {
             nrCards1 = inputData.getPlayerOneDecks().getNrCardsInDeck();
             nrdecks1 = inputData.getPlayerOneDecks().getNrDecks();
             indexdeck1 = inputData.getGames().get(k).getStartGame().getPlayerOneDeckIdx();
             //detaliile pentru jucatorul 1;
+            howManyTurns = 0;
+           manapower = 1;
+            for(int i = 0 ; i < 4 ; i++){
+                joc.getMasa().get(i).clear();
+            }
+            joc.player1 = new player();
+            joc.player2 = new player();
+            joc.player2.setMana(1);
+            joc.player1.setMana(1);
+            joc.player1.getHand().clear();
+            joc.player1.getDeck().clear();
+            joc.player2.getHand().clear();
+            joc.player2.getDeck().clear();
+
+            //
             nrCard2 = inputData.getPlayerTwoDecks().getNrCardsInDeck();
             nrdecks2 = inputData.getPlayerTwoDecks().getNrDecks();
             indexdeck2 = inputData.getGames().get(k).getStartGame().getPlayerTwoDeckIdx();
             //detaliile pt jucatorul2
-            seed = inputData.getGames().get(0).getStartGame().getShuffleSeed();
+            seed = inputData.getGames().get(k).getStartGame().getShuffleSeed();
             Random r = new Random(seed);
 
             starter = inputData.getGames().get(k).getStartGame().getStartingPlayer();
-
+            joc.player1.setDeck(new ArrayList<card>());
+            joc.player2.setDeck(new ArrayList<card>());
             joc.player1.addDeck1(joc.player1, nrCards1, indexdeck1, inputData);
             r = new Random(seed);
             Collections.shuffle(joc.player1.getDeck(), r);
             if (joc.player1.getDecks().get(0) instanceof Environment)
                 joc.player1.hand.add(new Environment((Environment) joc.player1.getDecks().get(0)));
-            else joc.player1.hand.add(new Minion((Minion) joc.player1.getDecks().get(0)));
+            else
+                joc.player1.hand.add(new Minion((Minion) joc.player1.getDecks().get(0)));
 
             joc.player1.getDecks().remove(0);
             //
@@ -121,13 +139,12 @@ public final class Main {
             //
 
 
-            joc.player1.setMana(1);
-            joc.player2.setMana(1);
+
 
             CardInput merou = inputData.getGames().get(k).getStartGame().getPlayerOneHero();
             joc.player1.setErou(new hero(merou.getMana(), merou.getDescription(), merou.getColors(), merou.getName()));
             //
-            merou = inputData.getGames().get(0).getStartGame().getPlayerTwoHero();
+            merou = inputData.getGames().get(k).getStartGame().getPlayerTwoHero();
             joc.player2.setErou(new hero(merou.getMana(), merou.getDescription(), merou.getColors(), merou.getName()));
             //
             starter = inputData.getGames().get(k).getStartGame().getStartingPlayer();
@@ -144,10 +161,16 @@ public final class Main {
                 }
                 if (command.equals("getPlayerHero")) {
                     int x = inputData.getGames().get(k).getActions().get(j).getPlayerIdx();
-                    if (x == 1)
-                        output.addObject().put("command", "getPlayerHero").put("playerIdx", 1).putPOJO("output", joc.player1.getErou());
-                    else
-                        output.addObject().put("command", "getPlayerHero").put("playerIdx", 2).putPOJO("output", joc.player2.getErou());
+                    hero a;
+                    if (x == 1) {
+
+                        a = new hero(joc.player1.getErou());
+                        output.addObject().put("command", "getPlayerHero").put("playerIdx", 1).putPOJO("output", a);
+                    } else {
+                        a = new hero(joc.player2.getErou());
+
+                        output.addObject().put("command", "getPlayerHero").put("playerIdx", 2).putPOJO("output", a);
+                    }
                 }
                 if (command.equals("getPlayerTurn")) {
                     output.addObject().put("command", "getPlayerTurn").put("output", starter);
@@ -184,23 +207,28 @@ public final class Main {
                     if (starter == 2) {
                         joc.unfreeze(joc.getMasa(), 0, 1);
                         joc.unattack(joc.getMasa(), 0, 1);
-
+                        joc.getPlayer2().getErou().attacked = 0;
                         starter = 1;
                     } else {
                         joc.unfreeze(joc.getMasa(), 2, 3);
-                        joc.unattack(joc.getMasa(), 0, 1);
-
+                        joc.unattack(joc.getMasa(), 2, 3);
+                        joc.getPlayer1().getErou().attacked = 0;
                         starter = 2;
                     }
                 }
                 if (command.equals("placeCard")) {
                     int x = inputData.getGames().get(k).getActions().get(j).getHandIdx();
-                    int row;
-
+                    int row = 0;
+                    Minion a;
                     if (starter == 1) {
-                        row = joc.getPlayer1().getHand().get(x).checkrow(joc.getPlayer1().getHand().get(x));
-                        if (row == 1) row = 2;
-                        else row = 3;
+                        if (!(joc.getPlayer1().getHand().get(x) instanceof Environment)) {
+                            a = new Minion((Minion) joc.getPlayer1().getHand().get(x));
+                            if (a.getName().equals("The Ripper") || a.getName().equals("Warden") || a.getName().equals("Goliath") || a.getName().equals("Miraj"))
+                                row = 2;
+                            else
+                                row = 3;
+                        }
+
                         if (joc.getPlayer1().getHand().get(x) instanceof Environment) {
                             output.addObject().put("command", "placeCard").put("handIdx", x).put("error", "Cannot place environment card on table.");
 
@@ -208,8 +236,10 @@ public final class Main {
                             output.addObject().put("command", "placeCard").put("handIdx", x).put("error", "Not enough mana to place card on table.");
 
                         } else if (joc.getMasa().get(row).size() == 5) // asta nu mrege inca
+                        {
+
                             output.addObject().put("command", "placeCard").put("handIdx", x).put("error", "Cannot place card on table since row is full.");
-                        else {
+                        } else {
 
                             joc.getMasa().get(row).add(new Minion((Minion) joc.getPlayer1().getHand().get(x)));
                             joc.getPlayer1().setMana(joc.getPlayer1().getMana() - joc.getPlayer1().getHand().get(x).getMana());
@@ -217,8 +247,13 @@ public final class Main {
 
                         }
                     } else {
-                        row = joc.getPlayer2().getHand().get(x).checkrow(joc.getPlayer2().getHand().get(x));
-
+                        if (!(joc.getPlayer2().getHand().get(x) instanceof Environment)) {
+                            a = new Minion((Minion) joc.getPlayer2().getHand().get(x));
+                            if ((a.getName().equals("The Ripper") || a.getName().equals("Warden") || a.getName().equals("Goliath") || a.getName().equals("Miraj")))
+                                row = 1;
+                            else
+                                row = 0;
+                        }
 
                         if (joc.getPlayer2().getHand().get(x) instanceof Environment) {
                             output.addObject().put("command", "placeCard").put("handIdx", x).put("error", "Cannot place environment card on table.");
@@ -267,7 +302,13 @@ public final class Main {
                     }
                 }
                 if (command.equals("getCardsOnTable")) {
-                    output.addObject().put("command", "getCardsOnTable").putPOJO("output", joc.masa);
+                    ArrayList<ArrayList<Minion>> copytable = new ArrayList<ArrayList<Minion>>(4);
+                    for (int q = 0; q < 4; q++)
+                        copytable.add(new ArrayList<>());
+                    for (int q = 0; q < 4; q++)
+                        for (int p = 0; p < joc.getMasa().get(q).size(); p++)
+                            copytable.get(q).add(new Minion(joc.getMasa().get(q).get(p)));
+                    output.addObject().put("command", "getCardsOnTable").putPOJO("output", copytable);
                 }
                 if (command.equals("getEnvironmentCardsInHand")) {
                     int x = inputData.getGames().get(k).getActions().get(j).getPlayerIdx();
@@ -289,12 +330,11 @@ public final class Main {
                     x = inputData.getGames().get(k).getActions().get(j).getX();
                     y = inputData.getGames().get(k).getActions().get(j).getY();
                     Minion extracted;
-                    if( y < joc.getMasa().get(x).size()) {
+                    if (y < joc.getMasa().get(x).size()) {
                         extracted = new Minion(joc.masa.get(x).get(y));
-                        output.addObject().put("command", "getCardAtPosition").putPOJO("output", extracted).put("x",x).put("y",y);
-                    }
-                    else
-                        output.addObject().put("command", "getCardAtPosition").put("x",x).put("y",y).put("output","No card available at that position.");
+                        output.addObject().put("command", "getCardAtPosition").putPOJO("output", extracted).put("x", x).put("y", y);
+                    } else
+                        output.addObject().put("command", "getCardAtPosition").put("x", x).put("y", y).put("output", "No card available at that position.");
 
                 }
                 if (command.equals("useEnvironmentCard")) {
@@ -358,6 +398,8 @@ public final class Main {
 
                             if (spell.getName().equals("Winterfell")) {
                                 joc.player2.getHand().remove(x);
+                                joc.Winterfell(joc.masa, affected);
+
                                 joc.player2.setMana(joc.player2.getMana() - spell.getMana());
 
 
@@ -403,16 +445,17 @@ public final class Main {
                     output.addObject().put("command", "getFrozenCardsOnTable").putPOJO("output", aux);
                 }
                 if (command.equals("cardUsesAttack")) {
-                   int x1, x2, y1, y2;
+                    int x1, x2, y1, y2;
+
                     x1 = inputData.getGames().get(k).getActions().get(j).getCardAttacker().getX();
                     y1 = inputData.getGames().get(k).getActions().get(j).getCardAttacker().getY();
                     x2 = inputData.getGames().get(k).getActions().get(j).getCardAttacked().getX();
                     y2 = inputData.getGames().get(k).getActions().get(j).getCardAttacked().getY();
-                    if( x1 >= 0 && x1 < 5 && x2 >= 0 && x2<5 && y1 >= 0 && y1 < joc.getMasa().get(x1).size()  && y2 >= 0 && y2 < joc.getMasa().get(x2).size()) {
+                    if (x1 >= 0 && x1 < 5 && x2 >= 0 && x2 < 5 && y1 >= 0 && y1 < joc.getMasa().get(x1).size() && y2 >= 0 && y2 < joc.getMasa().get(x2).size()) {
                         Minion min = new Minion(joc.getMasa().get(x1).get(y1));
                         String checkAttack;
                         checkAttack = min.CheckattackonTable(joc.masa, x1, y1, x2, y2, starter);
-                        System.out.println(checkAttack);
+
                         if (!checkAttack.equals("ok")) {
                             coordonate a = new coordonate(x1, y1);
                             coordonate b = new coordonate(x2, y2);
@@ -424,11 +467,135 @@ public final class Main {
                     }
 
                 }
+                if (command.equals("cardUsesAbility")) {
+                    int x1, x2, y1, y2;
+                    x1 = inputData.getGames().get(k).getActions().get(j).getCardAttacker().getX();
+                    y1 = inputData.getGames().get(k).getActions().get(j).getCardAttacker().getY();
+                    x2 = inputData.getGames().get(k).getActions().get(j).getCardAttacked().getX();
+                    y2 = inputData.getGames().get(k).getActions().get(j).getCardAttacked().getY();
+                    if (x1 >= 0 && x1 < 5 && x2 >= 0 && x2 < 5 && y1 >= 0 && y1 < joc.getMasa().get(x1).size() && y2 >= 0 && y2 < joc.getMasa().get(x2).size()) {
+                        Minion min = new Minion(joc.getMasa().get(x1).get(y1));
+                        String checkCardAbility;
+                        checkCardAbility = min.Checkability(joc.masa, x1, y1, x2, y2, starter);
+                        if (!checkCardAbility.equals("ok")) {
+                            coordonate a = new coordonate(x1, y1);
+                            coordonate b = new coordonate(x2, y2);
+                            checkAttackError afisare = new checkAttackError("cardUsesAbility", checkCardAbility, a, b);
+                            output.addPOJO(afisare);
+                        } else {
+                            min.attackability(joc.getMasa(), x1, y1, x2, y2);
+
+                        }
+                    }
+                }
+                if (command.equals("useAttackHero")) {
+                    int x1, y1;
+                    x1 = inputData.getGames().get(k).getActions().get(j).getCardAttacker().getX();
+                    y1 = inputData.getGames().get(k).getActions().get(j).getCardAttacker().getY();
+                    if (x1 >= 0 && x1 < 5 && y1 >= 0 && y1 < joc.getMasa().get(x1).size()) {
+                        Minion min = new Minion(joc.getMasa().get(x1).get(y1));
+                        String checkHeroAttack;
+                        String victory;
+                        checkHeroAttack = joc.checkHeroAttack(joc, x1, y1, starter);
+                        if (!checkHeroAttack.equals("ok")) {
+                            coordonate a = new coordonate(x1, y1);
+                            checkAttackHero afisare = new checkAttackHero("useAttackHero", checkHeroAttack, a);
+                            output.addPOJO(afisare);
+                        } else {
+                            victory = joc.attackHero(joc, x1, y1, starter);
+                            if (!(victory.equals("ok"))) {
+                                if(victory.equals("Player one killed the enemy hero."))
+                                    v1++;
+                                if(victory.equals("Player two killed the enemy hero."))
+                                    v2++;
+                                output.addObject().put("gameEnded", victory);
+                            }
+                        }
+                    }
+                }
+                if (command.equals("useHeroAbility")) {
+                    int x = inputData.getGames().get(k).getActions().get(j).getAffectedRow();
+                    String checkheropower;
+                    checkheropower = joc.checkHeroability(joc, x, starter);
+                    if (!checkheropower.equals("ok")) {
+                        output.addObject().put("command", "useHeroAbility").put("affectedRow", x).put("error", checkheropower);
+                    } else {
+                        if (starter == 1) {
+                            if (joc.getPlayer1().getErou().getName().equals("Lord Royce")) {
+                                joc.getPlayer1().getErou().SubZero(joc, x);
+                                joc.getPlayer1().setMana(joc.getPlayer1().getMana() - joc.getPlayer1().getErou().getMana());
+                                if (joc.getPlayer1().getMana() < 0)
+                                    joc.getPlayer1().setMana(0);
+
+                            }
+                            if (joc.getPlayer1().getErou().getName().equals("Empress Thorina")) {
+                                joc.getPlayer1().getErou().LowBlow(joc, x);
+                                joc.getPlayer1().setMana(joc.getPlayer1().getMana() - joc.getPlayer1().getErou().getMana());
+                                if (joc.getPlayer1().getMana() < 0)
+                                    joc.getPlayer1().setMana(0);
+                            }
+                            if (joc.getPlayer1().getErou().getName().equals("King Mudface")) {
+                                joc.getPlayer1().getErou().EarthBorn(joc, x);
+                                joc.getPlayer1().setMana(joc.getPlayer1().getMana() - joc.getPlayer1().getErou().getMana());
+                                if (joc.getPlayer1().getMana() < 0)
+                                    joc.getPlayer1().setMana(0);
+                            }
+                            if (joc.getPlayer1().getErou().getName().equals("General Kocioraw")) {
+                                joc.getPlayer1().getErou().BloodThirst(joc, x);
+                                joc.getPlayer1().setMana(joc.getPlayer1().getMana() - joc.getPlayer1().getErou().getMana());
+                                if (joc.getPlayer1().getMana() < 0)
+                                    joc.getPlayer1().setMana(0);
+                            }
+                            joc.getPlayer1().getErou().attacked = 1;
+
+                        } else {
+                            if (joc.getPlayer2().getErou().getName().equals("Lord Royce")) {
+                                joc.getPlayer2().getErou().SubZero(joc, x);
+                                joc.getPlayer2().setMana(joc.getPlayer2().getMana() - joc.getPlayer2().getErou().getMana());
+                                if (joc.getPlayer2().getMana() < 0)
+                                    joc.getPlayer2().setMana(0);
+
+                            }
+                            if (joc.getPlayer2().getErou().getName().equals("Empress Thorina")) {
+                                joc.getPlayer2().getErou().LowBlow(joc, x);
+                                joc.getPlayer2().setMana(joc.getPlayer2().getMana() - joc.getPlayer2().getErou().getMana());
+                                if (joc.getPlayer2().getMana() < 0)
+                                    joc.getPlayer2().setMana(0);
+                            }
+                            if (joc.getPlayer2().getErou().getName().equals("King Mudface")) {
+                                joc.getPlayer2().getErou().EarthBorn(joc, x);
+                                joc.getPlayer2().setMana(joc.getPlayer2().getMana() - joc.getPlayer2().getErou().getMana());
+                                if (joc.getPlayer2().getMana() < 0)
+                                    joc.getPlayer2().setMana(0);
+                            }
+                            if (joc.getPlayer2().getErou().getName().equals("General Kocioraw")) {
+                                joc.getPlayer2().getErou().BloodThirst(joc, x);
+                                joc.getPlayer2().setMana(joc.getPlayer2().getMana() - joc.getPlayer2().getErou().getMana());
+                                if (joc.getPlayer2().getMana() < 0)
+                                    joc.getPlayer2().setMana(0);
+                            }
+                            joc.getPlayer2().getErou().attacked = 1;
+                        }
+                    }
+                }
+                if (command.equals("getPlayerOneWins")){
+                    output.addObject().put("command","getPlayerOneWins").put("output",v1);
+                }
+
+                if (command.equals("getPlayerTwoWins")){
+                    output.addObject().put("command","getPlayerTwoWins").put("output",v2);
+                }
+                if (command.equals("getTotalGamesPlayed")){
+                    output.addObject().put("command","getTotalGamesPlayed").put("output",k+1);
+
+                }
+
+
 
             }
         }
 
-            //acum citim functiilez
+        //acum citim functiilez
 
         System.out.println();
         ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
