@@ -1,15 +1,17 @@
-package main;
+package myclasses;
 
 public class checkAttackError {
-    String  command;
+    String command;
     String error;
     coordonate cardAttacker, cardAttacked;
-    public checkAttackError(String command, String error, coordonate cardAttacker , coordonate cardAttacked) {
+
+    public checkAttackError(String command, String error, coordonate cardAttacker, coordonate cardAttacked) {
         this.setCommand(command);
         this.setError(error);
         this.setCardAttacker(cardAttacker);
         this.setCardAttacked(cardAttacked);
     }
+
     public String getError() {
         return error;
     }

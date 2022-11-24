@@ -1,15 +1,17 @@
-package main;
+package myclasses;
 
 public class coordonate {
-    int x,y;
+    int x, y;
 
     public int getX() {
         return x;
     }
-    public coordonate(int x , int y){
+
+    public coordonate(int x, int y) {
         this.x = x;
         this.y = y;
     }
+
     public void setX(int x) {
         this.x = x;
     }

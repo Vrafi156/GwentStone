@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import fileio.CardInput;
 import fileio.Input;
+import myclasses.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -94,8 +95,8 @@ public final class Main {
             indexdeck1 = inputData.getGames().get(k).getStartGame().getPlayerOneDeckIdx();
             //detaliile pentru jucatorul 1;
             howManyTurns = 0;
-           manapower = 1;
-            for(int i = 0 ; i < 4 ; i++){
+            manapower = 1;
+            for (int i = 0; i < 4; i++) {
                 joc.getMasa().get(i).clear();
             }
             joc.player1 = new player();
@@ -137,8 +138,6 @@ public final class Main {
 
             joc.player2.getDecks().remove(0);
             //
-
-
 
 
             CardInput merou = inputData.getGames().get(k).getStartGame().getPlayerOneHero();
@@ -207,12 +206,12 @@ public final class Main {
                     if (starter == 2) {
                         joc.unfreeze(joc.getMasa(), 0, 1);
                         joc.unattack(joc.getMasa(), 0, 1);
-                        joc.getPlayer2().getErou().attacked = 0;
+                        joc.getPlayer2().getErou().setAttacked(0);
                         starter = 1;
                     } else {
                         joc.unfreeze(joc.getMasa(), 2, 3);
                         joc.unattack(joc.getMasa(), 2, 3);
-                        joc.getPlayer1().getErou().attacked = 0;
+                        joc.getPlayer1().getErou().setAttacked(0);
                         starter = 2;
                     }
                 }
@@ -302,6 +301,7 @@ public final class Main {
                     }
                 }
                 if (command.equals("getCardsOnTable")) {
+                    //DEEP COPY CONSTRUCTOR FOR SHOWING THE RIGHT MINIONS ON TABLE
                     ArrayList<ArrayList<Minion>> copytable = new ArrayList<ArrayList<Minion>>(4);
                     for (int q = 0; q < 4; q++)
                         copytable.add(new ArrayList<>());
@@ -311,6 +311,7 @@ public final class Main {
                     output.addObject().put("command", "getCardsOnTable").putPOJO("output", copytable);
                 }
                 if (command.equals("getEnvironmentCardsInHand")) {
+                    //DEEP COPY CONSTRUCTOR FOR SHOWING THE RIGHT CARDS
                     int x = inputData.getGames().get(k).getActions().get(j).getPlayerIdx();
                     ArrayList<card> bonusArray = new ArrayList<card>();
                     if (x == 1) {
@@ -326,12 +327,13 @@ public final class Main {
                     }
                 }
                 if (command.equals("getCardAtPosition")) {
+                    //DEEP COPY CONSTRUCTOR FOR SHOWING THE RIGHT CARDS
                     int x, y;
                     x = inputData.getGames().get(k).getActions().get(j).getX();
                     y = inputData.getGames().get(k).getActions().get(j).getY();
                     Minion extracted;
                     if (y < joc.getMasa().get(x).size()) {
-                        extracted = new Minion(joc.masa.get(x).get(y));
+                        extracted = new Minion(joc.getMasa().get(x).get(y));
                         output.addObject().put("command", "getCardAtPosition").putPOJO("output", extracted).put("x", x).put("y", y);
                     } else
                         output.addObject().put("command", "getCardAtPosition").put("x", x).put("y", y).put("output", "No card available at that position.");
@@ -361,7 +363,6 @@ public final class Main {
 
                             }
                             if (spell.getName().equals("Heart Hound")) {
-
                                 if (affected == 3) {
                                     ok = 0;
                                 } else if (affected == 2) {
@@ -504,9 +505,9 @@ public final class Main {
                         } else {
                             victory = joc.attackHero(joc, x1, y1, starter);
                             if (!(victory.equals("ok"))) {
-                                if(victory.equals("Player one killed the enemy hero."))
+                                if (victory.equals("Player one killed the enemy hero."))
                                     v1++;
-                                if(victory.equals("Player two killed the enemy hero."))
+                                if (victory.equals("Player two killed the enemy hero."))
                                     v2++;
                                 output.addObject().put("gameEnded", victory);
                             }
@@ -578,25 +579,18 @@ public final class Main {
                         }
                     }
                 }
-                if (command.equals("getPlayerOneWins")){
-                    output.addObject().put("command","getPlayerOneWins").put("output",v1);
+                if (command.equals("getPlayerOneWins")) {
+                    output.addObject().put("command", "getPlayerOneWins").put("output", v1);
                 }
-
-                if (command.equals("getPlayerTwoWins")){
-                    output.addObject().put("command","getPlayerTwoWins").put("output",v2);
+                if (command.equals("getPlayerTwoWins")) {
+                    output.addObject().put("command", "getPlayerTwoWins").put("output", v2);
                 }
-                if (command.equals("getTotalGamesPlayed")){
-                    output.addObject().put("command","getTotalGamesPlayed").put("output",k+1);
-
+                if (command.equals("getTotalGamesPlayed")) {
+                    output.addObject().put("command", "getTotalGamesPlayed").put("output", k + 1);
                 }
-
-
-
             }
         }
-
         //acum citim functiilez
-
         System.out.println();
         ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
         objectWriter.writeValue(new File(filePath2), output);

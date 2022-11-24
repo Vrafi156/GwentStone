@@ -42,3 +42,12 @@
 
 
 <div align="center"><img src="https://tenor.com/view/homework-time-gif-24854817.gif" width="500px"></div>
+
+So... Let's begin.
+For the GwentStone I implemented a class Game which contains
+3 variabiles , 2 of the player class(Player1 and Player2) and an Arraylist 
+of Arraylist of Minions. Firstly I implemented the class card which contains
+all of the common aspects of a card (Mana ,Name , Colors,description ).
+From the card class i extended the Classes Minions, Enviroment and Hero
+The minion class has health and attackDamage, Envioment Card has special
+methods for the specific cards and 

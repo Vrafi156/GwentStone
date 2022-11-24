@@ -1,11 +1,11 @@
-package main;
+package myclasses;
 
 import java.util.ArrayList;
 
 public class Game {
-    player player1 = new player();
-    player player2 = new player();
-    ArrayList<ArrayList<Minion>> masa = new ArrayList<ArrayList<Minion>>(4);
+    public player player1 = new player();
+    public player player2 = new player();
+    public ArrayList<ArrayList<Minion>> masa = new ArrayList<ArrayList<Minion>>(4);
 
 
     int playerOneDeckIdx;
@@ -72,7 +72,7 @@ public class Game {
     }
 
 
-    void Firestorm(ArrayList<ArrayList<Minion>> masa, int row) {
+    public void Firestorm(ArrayList<ArrayList<Minion>> masa, int row) {
         for (int i = 0; i < masa.get(row).size(); i++)
             masa.get(row).get(i).setHealth(masa.get(row).get(i).getHealth() - 1);
         int j = 0;
@@ -86,14 +86,14 @@ public class Game {
 
     }
 
-    void Winterfell(ArrayList<ArrayList<Minion>> masa, int row) {
+    public void Winterfell(ArrayList<ArrayList<Minion>> masa, int row) {
         for (int i = 0; i < masa.get(row).size(); i++)
             masa.get(row).get(i).setFrozen(1);
         ;
 
     }
 
-    void Heart(ArrayList<ArrayList<Minion>> masa, int row, ArrayList<card> a) {
+    public void Heart(ArrayList<ArrayList<Minion>> masa, int row, ArrayList<card> a) {
         int imax = 0;
         int max = masa.get(row).get(0).getHealth();
         int oglindit;
@@ -122,7 +122,7 @@ public class Game {
 
     }
 
-    void unfreeze(ArrayList<ArrayList<Minion>> masa, int x, int y) {
+    public void unfreeze(ArrayList<ArrayList<Minion>> masa, int x, int y) {
         for (int i = 0; i < masa.get(x).size(); i++) {
             masa.get(x).get(i).setFrozen(0);
         }
@@ -130,7 +130,7 @@ public class Game {
             masa.get(y).get(i).setFrozen(0);
     }
 
-    void unattack(ArrayList<ArrayList<Minion>> masa, int x, int y) {
+    public void unattack(ArrayList<ArrayList<Minion>> masa, int x, int y) {
         for (int i = 0; i < masa.get(x).size(); i++) {
             masa.get(x).get(i).setAttacked(0);
             ;
@@ -142,7 +142,7 @@ public class Game {
         }
     }
 
-    void getfrost(ArrayList<ArrayList<Minion>> masa, ArrayList<Minion> a) {
+    public void getfrost(ArrayList<ArrayList<Minion>> masa, ArrayList<Minion> a) {
         for (int i = 0; i < 4; i++)
             for (int j = 0; j < masa.get(i).size(); j++) {
                 if (masa.get(i).get(j).frozen == 1) {
@@ -151,7 +151,7 @@ public class Game {
             }
     }
 
-    String checkHeroAttack(Game joc, int x, int y, int starter) {
+    public String checkHeroAttack(Game joc, int x, int y, int starter) {
         Minion attacker = new Minion(masa.get(x).get(y));
         if (attacker.frozen == 1) {
             return "Attacker card is frozen.";
@@ -181,7 +181,7 @@ public class Game {
 
     }
 
-    String attackHero(Game joc, int x, int y, int starter) {
+    public String attackHero(Game joc, int x, int y, int starter) {
         Minion attacker = new Minion(masa.get(x).get(y));
         if (starter == 1) {
             joc.getPlayer2().getErou().setHealth(joc.getPlayer2().getErou().getHealth() - attacker.getAttackDamage());
@@ -196,7 +196,7 @@ public class Game {
         return "ok";
     }
 
-    String checkHeroability(Game joc, int row, int starter) {
+    public String checkHeroability(Game joc, int row, int starter) {
         hero clone;
         if (starter == 1) {
 

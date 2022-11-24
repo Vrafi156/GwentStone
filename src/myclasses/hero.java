@@ -1,29 +1,41 @@
-package main;
+package myclasses;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
 
-public class hero extends card{
+public class hero extends card {
     private int health;
-    int attacked;
-    public hero(int mana, String description, ArrayList<String> colors,String name){
+
+     public int attacked;
+     @JsonIgnore
+    public int getAttacked() {
+        return attacked;
+    }
+
+    public void setAttacked(int attacked) {
+        this.attacked = attacked;
+    }
+
+    public hero(int mana, String description, ArrayList<String> colors, String name) {
         this.setMana(mana);
         this.setDescription(description);
-        this.setColors( colors);
-        this.setName( name);
-
+        this.setColors(colors);
+        this.setName(name);
         this.health = 30;
         attacked = 0;
-
     }
-    public hero(hero a){
+
+    public hero(hero a) {
         this.setMana(a.getMana());
         this.setDescription(a.getDescription());
-        this.setColors( a.getColors());
-        this.setName( a.getName());
+        this.setColors(a.getColors());
+        this.setName(a.getName());
         this.setHealth(a.getHealth());
         this.attacked = a.attacked;
 
     }
+
     public int getHealth() {
         return health;
     }
@@ -33,26 +45,26 @@ public class hero extends card{
     }
 
 
-
-    void SubZero(Game joc, int row){
+    public void SubZero(Game joc, int row) {
         Minion ref;
         int maxAttack = joc.getMasa().get(row).get(0).getAttackDamage();
         ref = joc.getMasa().get(row).get(0);
-        for(int i = 1; i < joc.getMasa().get(row).size();i++) {
-            if(joc.getMasa().get(row).get(i).getAttackDamage() > maxAttack) {
+        for (int i = 1; i < joc.getMasa().get(row).size(); i++) {
+            if (joc.getMasa().get(row).get(i).getAttackDamage() > maxAttack) {
                 maxAttack = joc.getMasa().get(row).get(i).getAttackDamage();
                 ref = joc.getMasa().get(row).get(i);
             }
         }
         ref.frozen = 1;
     }
-    void LowBlow(Game joc, int row) {
+
+    public void LowBlow(Game joc, int row) {
         Minion ref;
         int maxhp = joc.getMasa().get(row).get(0).getHealth();
-        int j = 0 ;
+        int j = 0;
         ref = joc.getMasa().get(row).get(0);
-        for(int i = 1; i < joc.getMasa().get(row).size();i++) {
-            if(joc.getMasa().get(row).get(i).getHealth() > maxhp) {
+        for (int i = 1; i < joc.getMasa().get(row).size(); i++) {
+            if (joc.getMasa().get(row).get(i).getHealth() > maxhp) {
                 maxhp = joc.getMasa().get(row).get(i).getHealth();
                 ref = joc.getMasa().get(row).get(i);
                 j = i;
@@ -61,17 +73,19 @@ public class hero extends card{
         joc.getMasa().get(row).remove(j);
     }
 
-    void EarthBorn(Game joc, int row){
-        for(int i = 0 ; i < joc.getMasa().get(row).size();i++){
+    public void EarthBorn(Game joc, int row) {
+        for (int i = 0; i < joc.getMasa().get(row).size(); i++) {
             joc.getMasa().get(row).get(i).setHealth(joc.getMasa().get(row).get(i).getHealth() + 1);
         }
 
     }
-    void BloodThirst(Game joc, int row){
-        for(int i = 0 ; i < joc.getMasa().get(row).size();i++){
+
+    public void BloodThirst(Game joc, int row) {
+        for (int i = 0; i < joc.getMasa().get(row).size(); i++) {
             joc.getMasa().get(row).get(i).setAttackDamage(joc.getMasa().get(row).get(i).getAttackDamage() + 1);
         }
     }
+
     @Override
 
     public String toString() {
@@ -79,7 +93,7 @@ public class hero extends card{
                 "mana=" + this.getMana() +
                 ", description='" + this.getDescription() + '\'' +
                 ", colors=" + this.getColors() +
-                ", name='" +  this.getName() + ", health='" + health + '\'' +
+                ", name='" + this.getName() + ", health='" + health + '\'' +
                 '}';
     }
     // de implementat eroi

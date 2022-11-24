@@ -1,4 +1,4 @@
-package main;
+package myclasses;
 
 import fileio.CardInput;
 import fileio.Input;
@@ -8,8 +8,8 @@ import java.util.ArrayList;
 public class player {
     private int nrCardsInDeck;
     private int nrDecks;
-     ArrayList<card> deck = new ArrayList<card>();
-     ArrayList<card> hand = new ArrayList<card>();
+    public ArrayList<card> deck = new ArrayList<card>();
+    public ArrayList<card> hand = new ArrayList<card>();
     int wins;
 
 
@@ -22,7 +22,8 @@ public class player {
     }
 
     private hero erou;
-    int mana;
+    public int mana;
+
     public int getNrCardsInDeck() {
         return nrCardsInDeck;
     }
@@ -53,10 +54,11 @@ public class player {
     public hero getErou() {
         return erou;
     }
-    void addDeck1(player jucator, int n, int j , Input input){
+
+    public void addDeck1(player jucator, int n, int j, Input input) {
         Minion b;
         Environment c;
-        for(int i = 0 ; i < n ; i++) {
+        for (int i = 0; i < n; i++) {
             CardInput a = input.getPlayerOneDecks().getDecks().get(j).get(i); //selectez o carte
             if (a.getName().equals("Winterfell") || a.getName().equals("Firestorm") || a.getName().equals("Heart Hound")) {
                 c = new Environment(a.getMana(), a.getDescription(), a.getColors(), a.getName());
@@ -67,19 +69,20 @@ public class player {
             }
         }
     }
-    void addDeck2(player jucator, int n, int j , Input input) {
+
+    public void addDeck2(player jucator, int n, int j, Input input) {
         Minion b;
         Environment c;
         for (int i = 0; i < n; i++) {
-                CardInput a = input.getPlayerTwoDecks().getDecks().get(j).get(i); //selectez o carte
-                if (a.getName().equals("Winterfell") || a.getName().equals("Firestorm") || a.getName().equals("Heart Hound")) {
-                    c = new Environment(a.getMana(), a.getDescription(), a.getColors(), a.getName());
-                    jucator.getDecks().add(new Environment(c));
-                } else {
-                    b = new Minion(a.getMana(), a.getAttackDamage(), a.getHealth(), a.getDescription(), a.getColors(), a.getName());
-                    jucator.getDecks().add(new Minion(b));
-                }
+            CardInput a = input.getPlayerTwoDecks().getDecks().get(j).get(i); //selectez o carte
+            if (a.getName().equals("Winterfell") || a.getName().equals("Firestorm") || a.getName().equals("Heart Hound")) {
+                c = new Environment(a.getMana(), a.getDescription(), a.getColors(), a.getName());
+                jucator.getDecks().add(new Environment(c));
+            } else {
+                b = new Minion(a.getMana(), a.getAttackDamage(), a.getHealth(), a.getDescription(), a.getColors(), a.getName());
+                jucator.getDecks().add(new Minion(b));
             }
+        }
     }
 
 
